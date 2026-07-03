@@ -9,14 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Request object for sending a batch that is currently in draft state.
- * Specifies delivery products per destination country, print mode, and print spectrum.
- * Use the builder pattern for construction.
- */
 public class BatchSendRequest {
 
-    private final List<DeliveryProductEntry> deliveryProducts;
+    private final List<BatchSendDeliveryProductAttributes> deliveryProducts;
     private final PrintMode printMode;
     private final PrintSpectrum printSpectrum;
 
@@ -27,16 +22,8 @@ public class BatchSendRequest {
     }
 
     public Map<String, Object> toJsonApiRequest(String batchId) {
-        List<Map<String, String>> products = new ArrayList<>();
-        for (DeliveryProductEntry entry : deliveryProducts) {
-            Map<String, String> product = new HashMap<>();
-            product.put("country", entry.country());
-            product.put("delivery_product", entry.deliveryProduct().getValue());
-            products.add(product);
-        }
-
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("delivery_products", products);
+        attributes.put("delivery_products", deliveryProducts);
         attributes.put("print_mode", printMode.getValue());
         attributes.put("print_spectrum", printSpectrum.getValue());
 
@@ -50,15 +37,16 @@ public class BatchSendRequest {
         return request;
     }
 
-    public record DeliveryProductEntry(String country, DeliveryProduct deliveryProduct) {
-    }
+    public List<BatchSendDeliveryProductAttributes> getDeliveryProducts() { return deliveryProducts; }
+    public PrintMode getPrintMode() { return printMode; }
+    public PrintSpectrum getPrintSpectrum() { return printSpectrum; }
 
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private final List<DeliveryProductEntry> deliveryProducts = new ArrayList<>();
+        private final List<BatchSendDeliveryProductAttributes> deliveryProducts = new ArrayList<>();
         private PrintMode printMode;
         private PrintSpectrum printSpectrum;
 
@@ -66,7 +54,7 @@ public class BatchSendRequest {
         }
 
         public Builder addDeliveryProduct(String country, DeliveryProduct deliveryProduct) {
-            this.deliveryProducts.add(new DeliveryProductEntry(country, deliveryProduct));
+            this.deliveryProducts.add(new BatchSendDeliveryProductAttributes(country, deliveryProduct));
             return this;
         }
 

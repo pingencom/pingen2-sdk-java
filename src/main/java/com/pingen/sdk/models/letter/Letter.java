@@ -61,7 +61,7 @@ public class Letter {
     private String trackingNumber;
 
     @JsonProperty("fonts")
-    private java.util.List<String> fonts;
+    private java.util.List<LetterFontAttributes> fonts;
 
     @JsonProperty("paper_types")
     private java.util.List<String> paperTypes;
@@ -177,8 +177,8 @@ public class Letter {
     public String getTrackingNumber() { return trackingNumber; }
     public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
 
-    public java.util.List<String> getFonts() { return fonts; }
-    public void setFonts(java.util.List<String> fonts) { this.fonts = fonts; }
+    public java.util.List<LetterFontAttributes> getFonts() { return fonts; }
+    public void setFonts(java.util.List<LetterFontAttributes> fonts) { this.fonts = fonts; }
 
     public java.util.List<String> getPaperTypes() { return paperTypes; }
     public void setPaperTypes(java.util.List<String> paperTypes) { this.paperTypes = paperTypes; }

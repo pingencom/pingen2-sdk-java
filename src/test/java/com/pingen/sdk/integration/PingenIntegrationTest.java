@@ -207,8 +207,8 @@ public class PingenIntegrationTest {
                 createdLetterId = response.getId();
                 assertTrue(pingen.letters(orgId).get(createdLetterId).isPresent());
 
-                System.out.println("sleep 10 second so that collection will contain the newly created letter");
-                TimeUnit.SECONDS.sleep(10);
+                System.out.println("sleep 20 second so that collection will contain the newly created letter");
+                TimeUnit.SECONDS.sleep(20);
 
                 final PagedResponse<Letter> letters = pingen.letters(orgId).getCollection(
                         CollectionParams.builder().filter(Filter.gt("created_at", integrationTestStart.toString())).build());
@@ -867,7 +867,7 @@ public class PingenIntegrationTest {
                 Resource<EBill> response = pingen.ebills(orgId).get(createdEBillId).orElseThrow();
 
                 assertEquals(createdEBillId, response.getId());
-                System.out.println("E-bill status: " + response.getAttributes().getStatus());
+                System.out.println("E-Bill status: " + response.getAttributes().getStatus());
             }
 
             @Test
@@ -895,7 +895,7 @@ public class PingenIntegrationTest {
 
                 assertNotNull(fileUrl, "File URL should not be null");
                 assertFalse(fileUrl.isBlank(), "File URL should not be blank");
-                System.out.println("E-bill file URL: " + fileUrl);
+                System.out.println("E-Bill file URL: " + fileUrl);
             }
         }
 
