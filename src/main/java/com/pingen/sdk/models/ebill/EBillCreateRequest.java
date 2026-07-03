@@ -1,8 +1,9 @@
 package com.pingen.sdk.models.ebill;
 
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
+
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Request object for creating a new e-bill delivery.
@@ -32,18 +33,6 @@ public class EBillCreateRequest {
         return fileBytes;
     }
 
-    public String getFileOriginalName() {
-        return fileOriginalName;
-    }
-
-    public boolean isAutoSend() {
-        return autoSend;
-    }
-
-    public EBillMetaData getMetaData() {
-        return metaData;
-    }
-
     public boolean hasFilePath() {
         return filePath != null;
     }
@@ -52,25 +41,10 @@ public class EBillCreateRequest {
         return fileBytes != null && fileBytes.length > 0;
     }
 
-    public Map<String, Object> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("file_original_name", fileOriginalName);
-        attributes.put("file_url", fileUrl);
-        attributes.put("file_url_signature", fileUrlSignature);
-        attributes.put("auto_send", autoSend);
-
-        if (metaData != null) {
-            attributes.put("meta_data", metaData.toMap());
-        }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "ebills");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-
-        return request;
+    public JsonApiRequest<EBillCreateAttributes> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
+        EBillCreateAttributes attributes = new EBillCreateAttributes(
+                fileOriginalName, fileUrl, fileUrlSignature, autoSend, metaData);
+        return new JsonApiRequest<>(new JsonApiRequestData<>("ebills", attributes));
     }
 
     public static Builder builder() {
@@ -102,8 +76,8 @@ public class EBillCreateRequest {
             return this;
         }
 
-        public Builder fileOriginalName(String fileOriginalName) {
-            this.fileOriginalName = fileOriginalName;
+        public Builder fileOriginalName(String n) {
+            this.fileOriginalName = n;
             return this;
         }
 
@@ -112,18 +86,16 @@ public class EBillCreateRequest {
             return this;
         }
 
-        public Builder metaData(EBillMetaData metaData) {
-            this.metaData = metaData;
+        public Builder metaData(EBillMetaData m) {
+            this.metaData = m;
             return this;
         }
 
         public EBillCreateRequest build() {
-            if (filePath == null && (fileBytes == null || fileBytes.length == 0)) {
+            if (filePath == null && (fileBytes == null || fileBytes.length == 0))
                 throw new IllegalArgumentException("Either filePath or fileBytes must be provided");
-            }
-            if (fileOriginalName == null || fileOriginalName.isBlank()) {
+            if (fileOriginalName == null || fileOriginalName.isBlank())
                 throw new IllegalArgumentException("fileOriginalName is required");
-            }
             return new EBillCreateRequest(this);
         }
     }

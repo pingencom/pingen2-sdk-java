@@ -1,7 +1,7 @@
 package com.pingen.sdk.models.webhook;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 
 /**
  * Request object for creating a new webhook.
@@ -19,37 +19,9 @@ public class WebhookCreateRequest {
         this.signingKey = builder.signingKey;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public WebhookEventCategory getEventCategory() {
-        return eventCategory;
-    }
-
-    public String getSigningKey() {
-        return signingKey;
-    }
-
-    public Map<String, Object> toJsonApiRequest() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("url", url);
-
-        if (eventCategory != null) {
-            attributes.put("event_category", eventCategory.getValue());
-        }
-        if (signingKey != null) {
-            attributes.put("signing_key", signingKey);
-        }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "webhooks");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-
-        return request;
+    public JsonApiRequest<WebhookCreateAttributes> toJsonApiRequest() {
+        return new JsonApiRequest<>(
+                new JsonApiRequestData<>("webhooks", new WebhookCreateAttributes(url, eventCategory, signingKey)));
     }
 
     public static Builder builder() {
@@ -69,14 +41,11 @@ public class WebhookCreateRequest {
             return this;
         }
 
-        public Builder eventCategory(WebhookEventCategory eventCategory) {
-            this.eventCategory = eventCategory;
+        public Builder eventCategory(WebhookEventCategory cat) {
+            this.eventCategory = cat;
             return this;
         }
 
-        /**
-         * Sets the signing key used to verify webhook payloads (20–32 characters).
-         */
         public Builder signingKey(String signingKey) {
             this.signingKey = signingKey;
             return this;

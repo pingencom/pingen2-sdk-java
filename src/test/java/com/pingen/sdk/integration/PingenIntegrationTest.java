@@ -207,8 +207,8 @@ public class PingenIntegrationTest {
                 createdLetterId = response.getId();
                 assertTrue(pingen.letters(orgId).get(createdLetterId).isPresent());
 
-                System.out.println("sleep 20 second so that collection will contain the newly created letter");
-                TimeUnit.SECONDS.sleep(20);
+                System.out.println("sleep 30 second so that collection will contain the newly created letter");
+                TimeUnit.SECONDS.sleep(30);
 
                 final PagedResponse<Letter> letters = pingen.letters(orgId).getCollection(
                         CollectionParams.builder().filter(Filter.gt("created_at", integrationTestStart.toString())).build());

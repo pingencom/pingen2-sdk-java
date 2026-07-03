@@ -1,7 +1,7 @@
 package com.pingen.sdk.models.letter;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 
 /**
  * Request object for sending a letter that is currently in draft state.
@@ -21,21 +21,10 @@ public class LetterSendRequest {
         this.metaData = builder.metaData;
     }
 
-    public Map<String, Object> toJsonApiRequest(String letterId) {
-        Map<String, Object> attributes = new HashMap<>();
-        if (deliveryProduct != null) attributes.put("delivery_product", deliveryProduct.getValue());
-        if (printMode != null) attributes.put("print_mode", printMode.getValue());
-        if (printSpectrum != null) attributes.put("print_spectrum", printSpectrum.getValue());
-        if (metaData != null) attributes.put("meta_data", metaData.toMap());
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", letterId);
-        data.put("type", "letters");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-        return request;
+    public JsonApiRequest<LetterSendAttributes> toJsonApiRequest(String letterId) {
+        LetterSendAttributes attributes = new LetterSendAttributes(
+                deliveryProduct, printMode, printSpectrum, metaData);
+        return new JsonApiRequest<>(new JsonApiRequestData<>(letterId, "letters", attributes));
     }
 
     public static Builder builder() {
@@ -51,23 +40,23 @@ public class LetterSendRequest {
         private Builder() {
         }
 
-        public Builder deliveryProduct(DeliveryProduct deliveryProduct) {
-            this.deliveryProduct = deliveryProduct;
+        public Builder deliveryProduct(DeliveryProduct d) {
+            this.deliveryProduct = d;
             return this;
         }
 
-        public Builder printMode(PrintMode printMode) {
-            this.printMode = printMode;
+        public Builder printMode(PrintMode m) {
+            this.printMode = m;
             return this;
         }
 
-        public Builder printSpectrum(PrintSpectrum printSpectrum) {
-            this.printSpectrum = printSpectrum;
+        public Builder printSpectrum(PrintSpectrum s) {
+            this.printSpectrum = s;
             return this;
         }
 
-        public Builder metaData(LetterMetaData metaData) {
-            this.metaData = metaData;
+        public Builder metaData(LetterMetaData m) {
+            this.metaData = m;
             return this;
         }
 

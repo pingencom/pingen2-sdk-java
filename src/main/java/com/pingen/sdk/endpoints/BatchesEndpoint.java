@@ -13,17 +13,18 @@ import com.pingen.sdk.models.batch.BatchEvent;
 import com.pingen.sdk.models.batch.BatchSendRequest;
 import com.pingen.sdk.models.batch.BatchStatistics;
 import com.pingen.sdk.models.batch.BatchUpdateRequest;
+import com.pingen.sdk.models.batch.BatchDeleteAttributes;
 import com.pingen.sdk.models.common.CollectionParams;
 import com.pingen.sdk.models.common.Resource;
 import com.pingen.sdk.models.common.internal.JsonApiCollection;
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 import com.pingen.sdk.models.common.internal.JsonApiResource;
 import com.pingen.sdk.models.common.PagedResponse;
 import com.pingen.sdk.upload.FileUploader;
 import com.pingen.sdk.upload.UploadResponse;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -109,15 +110,11 @@ public class BatchesEndpoint extends BaseEndpoint {
             throw new PingenException("Failed to read file: " + e.getMessage(), e);
         }
 
-        Map<String, Object> requestBody = createRequest.toJsonApiRequest(
-                uploadResponse.getUrl(),
-                uploadResponse.getUrlSignature()
-        );
-
         ApiRequest request = newRequest()
                 .method(HttpMethod.POST)
                 .url(buildUrl("batches"))
-                .body(apiClient.toJson(requestBody))
+                .body(apiClient.toJson(createRequest.toJsonApiRequest(
+                        uploadResponse.getUrl(), uploadResponse.getUrlSignature())))
                 .build();
 
         ApiResponse<JsonApiResource<Batch>> response =
@@ -203,21 +200,11 @@ public class BatchesEndpoint extends BaseEndpoint {
      * @param withLetters if true, all letters in the batch are also deleted
      */
     public void delete(String batchId, boolean withLetters) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("with_letters", withLetters);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", batchId);
-        data.put("type", "batches");
-        data.put("attributes", attributes);
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("data", data);
-
         ApiRequest request = newRequest()
                 .method(HttpMethod.DELETE)
                 .url(buildUrl("batches", batchId))
-                .body(apiClient.toJson(requestBody))
+                .body(apiClient.toJson(new JsonApiRequest<>(
+                        new JsonApiRequestData<>(batchId, "batches", new BatchDeleteAttributes(withLetters)))))
                 .build();
 
         apiClient.execute(request);

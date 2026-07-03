@@ -1,13 +1,13 @@
 package com.pingen.sdk.models.batch;
 
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 import com.pingen.sdk.models.letter.DeliveryProduct;
 import com.pingen.sdk.models.letter.PrintMode;
 import com.pingen.sdk.models.letter.PrintSpectrum;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BatchSendRequest {
 
@@ -21,24 +21,16 @@ public class BatchSendRequest {
         this.printSpectrum = builder.printSpectrum;
     }
 
-    public Map<String, Object> toJsonApiRequest(String batchId) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("delivery_products", deliveryProducts);
-        attributes.put("print_mode", printMode.getValue());
-        attributes.put("print_spectrum", printSpectrum.getValue());
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", batchId);
-        data.put("type", "batches");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-        return request;
+    public JsonApiRequest<BatchSendAttributes> toJsonApiRequest(String batchId) {
+        BatchSendAttributes attributes = new BatchSendAttributes(deliveryProducts, printMode, printSpectrum);
+        return new JsonApiRequest<>(new JsonApiRequestData<>(batchId, "batches", attributes));
     }
 
     public List<BatchSendDeliveryProductAttributes> getDeliveryProducts() { return deliveryProducts; }
-    public PrintMode getPrintMode() { return printMode; }
+
+    public PrintMode getPrintMode() {
+        return printMode;
+    }
     public PrintSpectrum getPrintSpectrum() { return printSpectrum; }
 
     public static Builder builder() {
@@ -58,13 +50,13 @@ public class BatchSendRequest {
             return this;
         }
 
-        public Builder printMode(PrintMode printMode) {
-            this.printMode = printMode;
+        public Builder printMode(PrintMode m) {
+            this.printMode = m;
             return this;
         }
 
-        public Builder printSpectrum(PrintSpectrum printSpectrum) {
-            this.printSpectrum = printSpectrum;
+        public Builder printSpectrum(PrintSpectrum s) {
+            this.printSpectrum = s;
             return this;
         }
 

@@ -1,8 +1,9 @@
 package com.pingen.sdk.models.letter;
 
-import java.util.HashMap;
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * Request object for calculating a letter's price.
@@ -24,22 +25,10 @@ public class LetterPriceCalculatorRequest {
         this.deliveryProduct = builder.deliveryProduct;
     }
 
-    public Map<String, Object> toJsonApiRequest() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("country", country);
-        attributes.put("paper_types", paperTypes);
-        attributes.put("print_mode", printMode.getValue());
-        attributes.put("print_spectrum", printSpectrum.getValue());
-        attributes.put("delivery_product", deliveryProduct.getValue());
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "letter_price_calculator");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-
-        return request;
+    public JsonApiRequest<LetterPriceCalculatorAttributes> toJsonApiRequest() {
+        LetterPriceCalculatorAttributes attributes = new LetterPriceCalculatorAttributes(
+                country, paperTypes, printMode, printSpectrum, deliveryProduct);
+        return new JsonApiRequest<>(new JsonApiRequestData<>("letter_price_calculator", attributes));
     }
 
     public static Builder builder() {
@@ -66,18 +55,18 @@ public class LetterPriceCalculatorRequest {
             return this;
         }
 
-        public Builder printMode(PrintMode printMode) {
-            this.printMode = printMode;
+        public Builder printMode(PrintMode m) {
+            this.printMode = m;
             return this;
         }
 
-        public Builder printSpectrum(PrintSpectrum printSpectrum) {
-            this.printSpectrum = printSpectrum;
+        public Builder printSpectrum(PrintSpectrum s) {
+            this.printSpectrum = s;
             return this;
         }
 
-        public Builder deliveryProduct(DeliveryProduct deliveryProduct) {
-            this.deliveryProduct = deliveryProduct;
+        public Builder deliveryProduct(DeliveryProduct d) {
+            this.deliveryProduct = d;
             return this;
         }
 

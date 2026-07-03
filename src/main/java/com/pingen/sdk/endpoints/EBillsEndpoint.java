@@ -105,15 +105,11 @@ public class EBillsEndpoint extends BaseEndpoint {
             throw new PingenException("Failed to read file: " + e.getMessage(), e);
         }
 
-        Map<String, Object> requestBody = createRequest.toJsonApiRequest(
-                uploadResponse.getUrl(),
-                uploadResponse.getUrlSignature()
-        );
-
         ApiRequest request = newRequest()
                 .method(HttpMethod.POST)
                 .url(buildUrl("deliveries/ebills"))
-                .body(apiClient.toJson(requestBody))
+                .body(apiClient.toJson(createRequest.toJsonApiRequest(
+                        uploadResponse.getUrl(), uploadResponse.getUrlSignature())))
                 .build();
 
         ApiResponse<JsonApiResource<EBill>> response =

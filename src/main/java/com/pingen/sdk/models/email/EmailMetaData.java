@@ -1,17 +1,32 @@
 package com.pingen.sdk.models.email;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Metadata required when creating an email delivery.
  * All fields are required.
  */
 public class EmailMetaData {
 
+    @JsonProperty("sender_name")
     private final String senderName;
+
+    @JsonProperty("recipient_email")
     private final String recipientEmail;
+
+    @JsonProperty("recipient_name")
     private final String recipientName;
+
+    @JsonProperty("reply_email")
     private final String replyEmail;
+
+    @JsonProperty("reply_name")
     private final String replyName;
+
+    @JsonProperty("subject")
     private final String subject;
+
+    @JsonProperty("content")
     private final String content;
 
     private EmailMetaData(Builder builder) {
@@ -52,30 +67,13 @@ public class EmailMetaData {
         return content;
     }
 
-    public java.util.Map<String, Object> toMap() {
-        java.util.Map<String, Object> map = new java.util.HashMap<>();
-        map.put("sender_name", senderName);
-        map.put("recipient_email", recipientEmail);
-        map.put("recipient_name", recipientName);
-        map.put("reply_email", replyEmail);
-        map.put("reply_name", replyName);
-        map.put("subject", subject);
-        map.put("content", content);
-        return map;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private String senderName;
-        private String recipientEmail;
-        private String recipientName;
-        private String replyEmail;
-        private String replyName;
-        private String subject;
-        private String content;
+        private String senderName, recipientEmail, recipientName;
+        private String replyEmail, replyName, subject, content;
 
         private Builder() {
         }

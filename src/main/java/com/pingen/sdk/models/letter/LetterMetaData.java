@@ -1,7 +1,7 @@
 package com.pingen.sdk.models.letter;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Optional metadata for a letter, allowing programmatic specification of recipient and sender
@@ -9,7 +9,10 @@ import java.util.Map;
  */
 public class LetterMetaData {
 
+    @JsonProperty("recipient")
     private final AddressEntry recipient;
+
+    @JsonProperty("sender")
     private final AddressEntry sender;
 
     private LetterMetaData(Builder builder) {
@@ -23,13 +26,6 @@ public class LetterMetaData {
 
     public AddressEntry getSender() {
         return sender;
-    }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        if (recipient != null) map.put("recipient", recipient.toMap());
-        if (sender != null) map.put("sender", sender.toMap());
-        return map;
     }
 
     public static Builder builder() {
@@ -60,13 +56,21 @@ public class LetterMetaData {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class AddressEntry {
+        @JsonProperty("name")
         private final String name;
+        @JsonProperty("street")
         private final String street;
+        @JsonProperty("pobox")
         private final String pobox;
+        @JsonProperty("number")
         private final String number;
+        @JsonProperty("zip")
         private final String zip;
+        @JsonProperty("city")
         private final String city;
+        @JsonProperty("country")
         private final String country;
 
         private AddressEntry(AddressBuilder builder) {
@@ -79,16 +83,32 @@ public class LetterMetaData {
             this.country = builder.country;
         }
 
-        public Map<String, Object> toMap() {
-            Map<String, Object> map = new HashMap<>();
-            if (name != null) map.put("name", name);
-            if (street != null) map.put("street", street);
-            if (pobox != null) map.put("pobox", pobox);
-            if (number != null) map.put("number", number);
-            if (zip != null) map.put("zip", zip);
-            if (city != null) map.put("city", city);
-            if (country != null) map.put("country", country);
-            return map;
+        public String getName() {
+            return name;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public String getPobox() {
+            return pobox;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public String getZip() {
+            return zip;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getCountry() {
+            return country;
         }
 
         public static AddressBuilder builder() {
@@ -97,23 +117,40 @@ public class LetterMetaData {
     }
 
     public static class AddressBuilder {
-        private String name;
-        private String street;
-        private String pobox;
-        private String number;
-        private String zip;
-        private String city;
-        private String country;
+        private String name, street, pobox, number, zip, city, country;
 
         private AddressBuilder() {
         }
 
-        public AddressBuilder name(String name) { this.name = name; return this; }
-        public AddressBuilder street(String street) { this.street = street; return this; }
-        public AddressBuilder pobox(String pobox) { this.pobox = pobox; return this; }
-        public AddressBuilder number(String number) { this.number = number; return this; }
-        public AddressBuilder zip(String zip) { this.zip = zip; return this; }
-        public AddressBuilder city(String city) { this.city = city; return this; }
+        public AddressBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public AddressBuilder street(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public AddressBuilder pobox(String pobox) {
+            this.pobox = pobox;
+            return this;
+        }
+
+        public AddressBuilder number(String number) {
+            this.number = number;
+            return this;
+        }
+
+        public AddressBuilder zip(String zip) {
+            this.zip = zip;
+            return this;
+        }
+
+        public AddressBuilder city(String city) {
+            this.city = city;
+            return this;
+        }
         public AddressBuilder country(String country) { this.country = country; return this; }
 
         public AddressEntry build() {

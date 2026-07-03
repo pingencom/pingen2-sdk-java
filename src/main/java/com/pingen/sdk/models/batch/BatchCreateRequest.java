@@ -1,5 +1,7 @@
 package com.pingen.sdk.models.batch;
 
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 import com.pingen.sdk.models.letter.AddressPosition;
 
 import java.nio.file.Path;
@@ -48,35 +50,6 @@ public class BatchCreateRequest {
         return fileBytes;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public BatchIcon getIcon() {
-        return icon;
-    }
-
-    public String getFileOriginalName() {
-        return fileOriginalName;
-    }
-
-    public AddressPosition getAddressPosition() {
-        return addressPosition;
-    }
-
-    public GroupingType getGroupingType() {
-        return groupingType;
-    }
-
-    public BatchGroupingSplitType getGroupingOptionsSplitType() { return groupingOptionsSplitType; }
-    public BatchGroupingSplitPosition getGroupingOptionsSplitPosition() { return groupingOptionsSplitPosition; }
-    public Integer getGroupingOptionsSplitSize() { return groupingOptionsSplitSize; }
-    public String getGroupingOptionsSplitSeparator() { return groupingOptionsSplitSeparator; }
-
-    public Map<String, Object> getAdditionalAttributes() {
-        return additionalAttributes;
-    }
-
     public boolean hasFilePath() {
         return filePath != null;
     }
@@ -85,56 +58,14 @@ public class BatchCreateRequest {
         return fileBytes != null && fileBytes.length > 0;
     }
 
-    /**
-     * Builds the JSON:API request body for creating a batch.
-     *
-     * @param fileUrl the file URL from the upload step
-     * @param fileUrlSignature the file URL signature from the upload step
-     * @return the JSON:API request object
-     */
-    public Map<String, Object> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("file_original_name", fileOriginalName);
-        attributes.put("file_url", fileUrl);
-        attributes.put("file_url_signature", fileUrlSignature);
-
-        if (name != null) {
-            attributes.put("name", name);
-        }
-        if (icon != null) {
-            attributes.put("icon", icon.getValue());
-        }
-        if (addressPosition != null) {
-            attributes.put("address_position", addressPosition.getValue());
-        }
-        if (groupingType != null) {
-            attributes.put("grouping_type", groupingType.getValue());
-        }
-        if (groupingOptionsSplitType != null) {
-            attributes.put("grouping_options_split_type", groupingOptionsSplitType.getValue());
-        }
-        if (groupingOptionsSplitPosition != null) {
-            attributes.put("grouping_options_split_position", groupingOptionsSplitPosition.getValue());
-        }
-        if (groupingOptionsSplitSize != null) {
-            attributes.put("grouping_options_split_size", groupingOptionsSplitSize);
-        }
-        if (groupingOptionsSplitSeparator != null) {
-            attributes.put("grouping_options_split_separator", groupingOptionsSplitSeparator);
-        }
-
-        if (additionalAttributes != null) {
-            attributes.putAll(additionalAttributes);
-        }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "batches");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-
-        return request;
+    public JsonApiRequest<BatchCreateAttributes> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
+        BatchCreateAttributes attributes = new BatchCreateAttributes(
+                fileOriginalName, fileUrl, fileUrlSignature,
+                name, icon, addressPosition, groupingType,
+                groupingOptionsSplitType, groupingOptionsSplitPosition,
+                groupingOptionsSplitSize, groupingOptionsSplitSeparator,
+                additionalAttributes);
+        return new JsonApiRequest<>(new JsonApiRequestData<>("batches", attributes));
     }
 
     public static Builder builder() {
@@ -183,43 +114,40 @@ public class BatchCreateRequest {
             return this;
         }
 
-        public Builder fileOriginalName(String fileOriginalName) {
-            this.fileOriginalName = fileOriginalName;
+        public Builder fileOriginalName(String n) {
+            this.fileOriginalName = n;
             return this;
         }
 
-        public Builder addressPosition(AddressPosition addressPosition) {
-            this.addressPosition = addressPosition;
+        public Builder addressPosition(AddressPosition p) {
+            this.addressPosition = p;
             return this;
         }
 
-        public Builder groupingType(GroupingType groupingType) {
-            this.groupingType = groupingType;
+        public Builder groupingType(GroupingType t) {
+            this.groupingType = t;
             return this;
         }
 
-        public Builder groupingOptionsSplitType(BatchGroupingSplitType splitType) {
-            this.groupingOptionsSplitType = splitType;
+        public Builder groupingOptionsSplitType(BatchGroupingSplitType t) {
+            this.groupingOptionsSplitType = t;
             return this;
         }
 
-        public Builder groupingOptionsSplitPosition(BatchGroupingSplitPosition splitPosition) {
-            this.groupingOptionsSplitPosition = splitPosition;
+        public Builder groupingOptionsSplitPosition(BatchGroupingSplitPosition p) {
+            this.groupingOptionsSplitPosition = p;
             return this;
         }
 
-        /** Number of pages per letter when split_type is page */
-        public Builder groupingOptionsSplitSize(Integer splitSize) {
-            this.groupingOptionsSplitSize = splitSize;
+        public Builder groupingOptionsSplitSize(Integer size) {
+            this.groupingOptionsSplitSize = size;
             return this;
         }
 
-        /** Separator string when split_type is custom */
-        public Builder groupingOptionsSplitSeparator(String splitSeparator) {
-            this.groupingOptionsSplitSeparator = splitSeparator;
+        public Builder groupingOptionsSplitSeparator(String sep) {
+            this.groupingOptionsSplitSeparator = sep;
             return this;
         }
-
         public Builder additionalAttribute(String key, Object value) {
             this.additionalAttributes.put(key, value);
             return this;

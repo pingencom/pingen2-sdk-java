@@ -1,5 +1,8 @@
 package com.pingen.sdk.models.letter;
 
+import com.pingen.sdk.models.common.internal.JsonApiRequest;
+import com.pingen.sdk.models.common.internal.JsonApiRequestData;
+
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,32 +49,8 @@ public class LetterCreateRequest {
         return fileOriginalName;
     }
 
-    public AddressPosition getAddressPosition() {
-        return addressPosition;
-    }
-
     public boolean isAutoSend() {
         return autoSend;
-    }
-
-    public DeliveryProduct getDeliveryProduct() {
-        return deliveryProduct;
-    }
-
-    public PrintMode getPrintMode() {
-        return printMode;
-    }
-
-    public PrintSpectrum getPrintSpectrum() {
-        return printSpectrum;
-    }
-
-    public LetterMetaData getMetaData() {
-        return metaData;
-    }
-
-    public Map<String, Object> getAdditionalAttributes() {
-        return additionalAttributes;
     }
 
     public boolean hasFilePath() {
@@ -82,48 +61,12 @@ public class LetterCreateRequest {
         return fileBytes != null && fileBytes.length > 0;
     }
 
-    /**
-     * Builds the JSON:API request body for creating a letter.
-     *
-     * @param fileUrl the file URL from the upload step
-     * @param fileUrlSignature the file URL signature from the upload step
-     * @return the JSON:API request object
-     */
-    public Map<String, Object> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("file_original_name", fileOriginalName);
-        attributes.put("file_url", fileUrl);
-        attributes.put("file_url_signature", fileUrlSignature);
-        attributes.put("auto_send", autoSend);
-
-        if (addressPosition != null) {
-            attributes.put("address_position", addressPosition.getValue());
-        }
-        if (deliveryProduct != null) {
-            attributes.put("delivery_product", deliveryProduct.getValue());
-        }
-        if (printMode != null) {
-            attributes.put("print_mode", printMode.getValue());
-        }
-        if (printSpectrum != null) {
-            attributes.put("print_spectrum", printSpectrum.getValue());
-        }
-        if (metaData != null) {
-            attributes.put("meta_data", metaData.toMap());
-        }
-
-        if (additionalAttributes != null) {
-            attributes.putAll(additionalAttributes);
-        }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("type", "letters");
-        data.put("attributes", attributes);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("data", data);
-
-        return request;
+    public JsonApiRequest<LetterCreateAttributes> toJsonApiRequest(String fileUrl, String fileUrlSignature) {
+        LetterCreateAttributes attributes = new LetterCreateAttributes(
+                fileOriginalName, fileUrl, fileUrlSignature,
+                autoSend, addressPosition, deliveryProduct, printMode, printSpectrum,
+                metaData, additionalAttributes);
+        return new JsonApiRequest<>(new JsonApiRequestData<>("letters", attributes));
     }
 
     public static Builder builder() {
@@ -160,13 +103,13 @@ public class LetterCreateRequest {
             return this;
         }
 
-        public Builder fileOriginalName(String fileOriginalName) {
-            this.fileOriginalName = fileOriginalName;
+        public Builder fileOriginalName(String name) {
+            this.fileOriginalName = name;
             return this;
         }
 
-        public Builder addressPosition(AddressPosition addressPosition) {
-            this.addressPosition = addressPosition;
+        public Builder addressPosition(AddressPosition p) {
+            this.addressPosition = p;
             return this;
         }
 
@@ -175,23 +118,23 @@ public class LetterCreateRequest {
             return this;
         }
 
-        public Builder deliveryProduct(DeliveryProduct deliveryProduct) {
-            this.deliveryProduct = deliveryProduct;
+        public Builder deliveryProduct(DeliveryProduct p) {
+            this.deliveryProduct = p;
             return this;
         }
 
-        public Builder printMode(PrintMode printMode) {
-            this.printMode = printMode;
+        public Builder printMode(PrintMode m) {
+            this.printMode = m;
             return this;
         }
 
-        public Builder printSpectrum(PrintSpectrum printSpectrum) {
-            this.printSpectrum = printSpectrum;
+        public Builder printSpectrum(PrintSpectrum s) {
+            this.printSpectrum = s;
             return this;
         }
 
-        public Builder metaData(LetterMetaData metaData) {
-            this.metaData = metaData;
+        public Builder metaData(LetterMetaData m) {
+            this.metaData = m;
             return this;
         }
 
@@ -201,12 +144,10 @@ public class LetterCreateRequest {
         }
 
         public LetterCreateRequest build() {
-            if (filePath == null && (fileBytes == null || fileBytes.length == 0)) {
+            if (filePath == null && (fileBytes == null || fileBytes.length == 0))
                 throw new IllegalArgumentException("Either filePath or fileBytes must be provided");
-            }
-            if (fileOriginalName == null || fileOriginalName.isBlank()) {
+            if (fileOriginalName == null || fileOriginalName.isBlank())
                 throw new IllegalArgumentException("fileOriginalName is required");
-            }
             return new LetterCreateRequest(this);
         }
     }
