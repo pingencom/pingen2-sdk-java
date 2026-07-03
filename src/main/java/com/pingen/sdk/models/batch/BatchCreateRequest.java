@@ -5,8 +5,6 @@ import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 import com.pingen.sdk.models.letter.AddressPosition;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Request object for creating a new batch.
@@ -25,7 +23,6 @@ public class BatchCreateRequest {
     private final BatchGroupingSplitPosition groupingOptionsSplitPosition;
     private final Integer groupingOptionsSplitSize;
     private final String groupingOptionsSplitSeparator;
-    private final Map<String, Object> additionalAttributes;
 
     private BatchCreateRequest(Builder builder) {
         this.filePath = builder.filePath;
@@ -39,7 +36,6 @@ public class BatchCreateRequest {
         this.groupingOptionsSplitPosition = builder.groupingOptionsSplitPosition;
         this.groupingOptionsSplitSize = builder.groupingOptionsSplitSize;
         this.groupingOptionsSplitSeparator = builder.groupingOptionsSplitSeparator;
-        this.additionalAttributes = builder.additionalAttributes;
     }
 
     public Path getFilePath() {
@@ -63,8 +59,7 @@ public class BatchCreateRequest {
                 fileOriginalName, fileUrl, fileUrlSignature,
                 name, icon, addressPosition, groupingType,
                 groupingOptionsSplitType, groupingOptionsSplitPosition,
-                groupingOptionsSplitSize, groupingOptionsSplitSeparator,
-                additionalAttributes);
+                groupingOptionsSplitSize, groupingOptionsSplitSeparator);
         return new JsonApiRequest<>(new JsonApiRequestData<>("batches", attributes));
     }
 
@@ -84,7 +79,6 @@ public class BatchCreateRequest {
         private BatchGroupingSplitPosition groupingOptionsSplitPosition;
         private Integer groupingOptionsSplitSize;
         private String groupingOptionsSplitSeparator;
-        private Map<String, Object> additionalAttributes = new HashMap<>();
 
         private Builder() {
         }
@@ -148,11 +142,6 @@ public class BatchCreateRequest {
             this.groupingOptionsSplitSeparator = sep;
             return this;
         }
-        public Builder additionalAttribute(String key, Object value) {
-            this.additionalAttributes.put(key, value);
-            return this;
-        }
-
         public BatchCreateRequest build() {
             if (filePath == null && (fileBytes == null || fileBytes.length == 0))
                 throw new IllegalArgumentException("Either filePath or fileBytes must be provided");

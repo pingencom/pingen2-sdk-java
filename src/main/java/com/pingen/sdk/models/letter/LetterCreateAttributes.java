@@ -1,10 +1,6 @@
 package com.pingen.sdk.models.letter;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Collections;
-import java.util.Map;
 
 public class LetterCreateAttributes {
 
@@ -27,13 +23,11 @@ public class LetterCreateAttributes {
     @JsonProperty("meta_data")
     private final LetterMetaData metaData;
 
-    private final Map<String, Object> additionalAttributes;
-
     public LetterCreateAttributes(
             String fileOriginalName, String fileUrl, String fileUrlSignature,
             boolean autoSend, AddressPosition addressPosition,
             DeliveryProduct deliveryProduct, PrintMode printMode, PrintSpectrum printSpectrum,
-            LetterMetaData metaData, Map<String, Object> additionalAttributes) {
+            LetterMetaData metaData) {
         this.fileOriginalName = fileOriginalName;
         this.fileUrl = fileUrl;
         this.fileUrlSignature = fileUrlSignature;
@@ -43,11 +37,9 @@ public class LetterCreateAttributes {
         this.printMode = printMode;
         this.printSpectrum = printSpectrum;
         this.metaData = metaData;
-        this.additionalAttributes = additionalAttributes;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalAttributes() {
-        return additionalAttributes != null ? additionalAttributes : Collections.emptyMap();
+    public LetterMetaData getMetaData() {
+        return metaData;
     }
 }

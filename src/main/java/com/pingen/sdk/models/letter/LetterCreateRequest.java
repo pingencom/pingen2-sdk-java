@@ -4,8 +4,6 @@ import com.pingen.sdk.models.common.internal.JsonApiRequest;
 import com.pingen.sdk.models.common.internal.JsonApiRequestData;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Request object for creating a new letter.
@@ -22,7 +20,6 @@ public class LetterCreateRequest {
     private final PrintMode printMode;
     private final PrintSpectrum printSpectrum;
     private final LetterMetaData metaData;
-    private final Map<String, Object> additionalAttributes;
 
     private LetterCreateRequest(Builder builder) {
         this.filePath = builder.filePath;
@@ -34,7 +31,6 @@ public class LetterCreateRequest {
         this.printMode = builder.printMode;
         this.printSpectrum = builder.printSpectrum;
         this.metaData = builder.metaData;
-        this.additionalAttributes = builder.additionalAttributes;
     }
 
     public Path getFilePath() {
@@ -65,7 +61,7 @@ public class LetterCreateRequest {
         LetterCreateAttributes attributes = new LetterCreateAttributes(
                 fileOriginalName, fileUrl, fileUrlSignature,
                 autoSend, addressPosition, deliveryProduct, printMode, printSpectrum,
-                metaData, additionalAttributes);
+                metaData);
         return new JsonApiRequest<>(new JsonApiRequestData<>("letters", attributes));
     }
 
@@ -83,7 +79,6 @@ public class LetterCreateRequest {
         private PrintMode printMode;
         private PrintSpectrum printSpectrum;
         private LetterMetaData metaData;
-        private Map<String, Object> additionalAttributes = new HashMap<>();
 
         private Builder() {
         }
@@ -135,11 +130,6 @@ public class LetterCreateRequest {
 
         public Builder metaData(LetterMetaData m) {
             this.metaData = m;
-            return this;
-        }
-
-        public Builder additionalAttribute(String key, Object value) {
-            this.additionalAttributes.put(key, value);
             return this;
         }
 

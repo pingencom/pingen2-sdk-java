@@ -1,12 +1,8 @@
 package com.pingen.sdk.models.batch;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pingen.sdk.models.letter.AddressPosition;
-
-import java.util.Collections;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BatchCreateAttributes {
@@ -34,16 +30,13 @@ public class BatchCreateAttributes {
     @JsonProperty("grouping_options_split_separator")
     private final String groupingOptionsSplitSeparator;
 
-    private final Map<String, Object> additionalAttributes;
-
     public BatchCreateAttributes(
             String fileOriginalName, String fileUrl, String fileUrlSignature,
             String name, BatchIcon icon, AddressPosition addressPosition,
             GroupingType groupingType,
             BatchGroupingSplitType groupingOptionsSplitType,
             BatchGroupingSplitPosition groupingOptionsSplitPosition,
-            Integer groupingOptionsSplitSize, String groupingOptionsSplitSeparator,
-            Map<String, Object> additionalAttributes) {
+            Integer groupingOptionsSplitSize, String groupingOptionsSplitSeparator) {
         this.fileOriginalName = fileOriginalName;
         this.fileUrl = fileUrl;
         this.fileUrlSignature = fileUrlSignature;
@@ -55,11 +48,5 @@ public class BatchCreateAttributes {
         this.groupingOptionsSplitPosition = groupingOptionsSplitPosition;
         this.groupingOptionsSplitSize = groupingOptionsSplitSize;
         this.groupingOptionsSplitSeparator = groupingOptionsSplitSeparator;
-        this.additionalAttributes = additionalAttributes;
-    }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalAttributes() {
-        return additionalAttributes != null ? additionalAttributes : Collections.emptyMap();
     }
 }
