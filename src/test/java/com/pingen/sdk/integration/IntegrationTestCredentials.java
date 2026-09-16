@@ -32,7 +32,8 @@ class IntegrationTestCredentials {
         return PROPS.getProperty("PINGEN2_CLIENT_SECRET");
     }
 
-    static String organizationName() {
-        return PROPS.getProperty("PINGEN2_ORGANIZATION_NAME");
+    /** Optional: when unset, the suite uses the first organisation the credentials can see. */
+    static String organisationId() {
+        return PROPS.getProperty("PINGEN2_ORGANISATION_ID");
     }
 }

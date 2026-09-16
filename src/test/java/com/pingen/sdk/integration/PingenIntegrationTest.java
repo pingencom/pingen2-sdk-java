@@ -52,7 +52,7 @@ public class PingenIntegrationTest {
 
     private static final String CLIENT_ID = IntegrationTestCredentials.clientId();
     private static final String CLIENT_SECRET = IntegrationTestCredentials.clientSecret();
-    private static final String ORGANIZATION_NAME = IntegrationTestCredentials.organizationName();
+    private static final String ORGANISATION_ID = IntegrationTestCredentials.organisationId();
 
     private static Pingen pingen;
     private static String orgId;
@@ -72,9 +72,13 @@ public class PingenIntegrationTest {
                 .staging()
                 .build();
 
-        PagedResponse<Organisation> orgs = pingen.organisations().getCollection();
-        assertEquals(1, orgs.size(), "No organisations returned – check staging credentials");
-        orgId = orgs.getItems().get(0).getId();
+        if (ORGANISATION_ID != null && !ORGANISATION_ID.isBlank()) {
+            orgId = ORGANISATION_ID;
+        } else {
+            PagedResponse<Organisation> orgs = pingen.organisations().getCollection();
+            assertFalse(orgs.isEmpty(), "No organisations returned – check staging credentials");
+            orgId = orgs.getItems().get(0).getId();
+        }
         System.out.println("Using organisation ID: " + orgId);
 
         invoicePdfBytes = TestDocumentCreator.createInvoicePdf();
@@ -122,11 +126,10 @@ public class PingenIntegrationTest {
         void testListOrganisations() {
             PagedResponse<Organisation> response = pingen.organisations().getCollection();
 
-            assertEquals(1, response.size());
+            assertFalse(response.isEmpty());
 
             Resource<Organisation> first = response.getItems().get(0);
             assertNotNull(first.getId());
-            assertEquals(ORGANIZATION_NAME, first.getAttributes().getName());
         }
 
         @Test
@@ -135,8 +138,8 @@ public class PingenIntegrationTest {
         void testListOrganisationsPaginated() {
             PagedResponse<Organisation> response = pingen.organisations().getCollection(CollectionParams.builder().page(1, 5).build());
 
-            assertEquals(1, response.size());
-            assertEquals(ORGANIZATION_NAME, response.getItems().get(0).getAttributes().getName());
+            assertFalse(response.isEmpty());
+            assertTrue(response.size() <= 5, "a page must not exceed the requested limit");
         }
 
         @Test
@@ -146,7 +149,6 @@ public class PingenIntegrationTest {
             Resource<Organisation> response = pingen.organisations().get(orgId).orElseThrow();
 
             assertEquals(orgId, response.getId());
-            assertEquals(ORGANIZATION_NAME, response.getAttributes().getName());
         }
     }
 
