@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
- * Represents a Pingen organisation with its billing settings, plan, and usage limits.
+ * Represents a Pingen organisation with its billing settings and plan.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Organisation {
@@ -40,9 +40,6 @@ public class Organisation {
     @JsonProperty("missing_credits")
     private Double missingCredits;
 
-    @JsonProperty("default_country")
-    private String defaultCountry;
-
     @JsonProperty("default_address_position")
     private AddressPosition defaultAddressPosition;
 
@@ -51,15 +48,6 @@ public class Organisation {
 
     @JsonProperty("data_retention_pdf")
     private Integer dataRetentionPdf;
-
-    @JsonProperty("limits_monthly_letters_count")
-    private Integer limitsMonthlyLettersCount;
-
-    @JsonProperty("limits_monthly_emails_count")
-    private Integer limitsMonthlyEmailsCount;
-
-    @JsonProperty("limits_monthly_ebills_count")
-    private Integer limitsMonthlyEbillsCount;
 
     @JsonProperty("flags")
     private List<String> flags;
@@ -100,9 +88,6 @@ public class Organisation {
     public Double getMissingCredits() { return missingCredits; }
     public void setMissingCredits(Double missingCredits) { this.missingCredits = missingCredits; }
 
-    public String getDefaultCountry() { return defaultCountry; }
-    public void setDefaultCountry(String defaultCountry) { this.defaultCountry = defaultCountry; }
-
     public AddressPosition getDefaultAddressPosition() { return defaultAddressPosition; }
     public void setDefaultAddressPosition(AddressPosition defaultAddressPosition) { this.defaultAddressPosition = defaultAddressPosition; }
 
@@ -111,15 +96,6 @@ public class Organisation {
 
     public Integer getDataRetentionPdf() { return dataRetentionPdf; }
     public void setDataRetentionPdf(Integer dataRetentionPdf) { this.dataRetentionPdf = dataRetentionPdf; }
-
-    public Integer getLimitsMonthlyLettersCount() { return limitsMonthlyLettersCount; }
-    public void setLimitsMonthlyLettersCount(Integer limitsMonthlyLettersCount) { this.limitsMonthlyLettersCount = limitsMonthlyLettersCount; }
-
-    public Integer getLimitsMonthlyEmailsCount() { return limitsMonthlyEmailsCount; }
-    public void setLimitsMonthlyEmailsCount(Integer limitsMonthlyEmailsCount) { this.limitsMonthlyEmailsCount = limitsMonthlyEmailsCount; }
-
-    public Integer getLimitsMonthlyEbillsCount() { return limitsMonthlyEbillsCount; }
-    public void setLimitsMonthlyEbillsCount(Integer limitsMonthlyEbillsCount) { this.limitsMonthlyEbillsCount = limitsMonthlyEbillsCount; }
 
     public List<String> getFlags() { return flags; }
     public void setFlags(List<String> flags) { this.flags = flags; }

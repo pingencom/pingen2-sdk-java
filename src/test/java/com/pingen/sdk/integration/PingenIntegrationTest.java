@@ -569,7 +569,7 @@ public class PingenIntegrationTest {
                 System.out.println("sleep 5 second so that batch will be in correct state for deletion");
                 TimeUnit.SECONDS.sleep(5);
 
-                assertDoesNotThrow(() -> pingen.batches(orgId).deleteWithLetters(createdBatchId));
+                assertDoesNotThrow(() -> pingen.batches(orgId).deleteWithDeliverables(createdBatchId));
                 System.out.println("Deleted batch: " + createdBatchId);
             }
         }

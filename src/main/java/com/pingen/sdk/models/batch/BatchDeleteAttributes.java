@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BatchDeleteAttributes {
 
-    @JsonProperty("with_letters")
-    private final boolean withLetters;
+    @JsonProperty("with_deliverables")
+    private final boolean withDeliverables;
 
-    public BatchDeleteAttributes(boolean withLetters) {
-        this.withLetters = withLetters;
+    public BatchDeleteAttributes(boolean withDeliverables) {
+        this.withDeliverables = withDeliverables;
     }
 }

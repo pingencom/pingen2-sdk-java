@@ -291,11 +291,11 @@ pingen.batches(orgId).update("batch-uuid",
 // Cancel
 pingen.batches(orgId).cancel("batch-uuid");
 
-// Delete (batch only, keep letters)
-pingen.batches(orgId).deleteWithoutLetters("batch-uuid");
+// Delete (batch only, keep deliverables)
+pingen.batches(orgId).deleteWithoutDeliverables("batch-uuid");
 
-// Delete batch and all its letters
-pingen.batches(orgId).deleteWithLetters("batch-uuid");
+// Delete batch and all its deliverables (letters / e-bills / emails)
+pingen.batches(orgId).deleteWithDeliverables("batch-uuid");
 
 // Lifecycle events
 var events = pingen.batches(orgId).getEvents("batch-uuid");
