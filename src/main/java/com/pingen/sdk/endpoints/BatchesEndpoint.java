@@ -176,35 +176,57 @@ public class BatchesEndpoint extends BaseEndpoint {
     }
 
     /**
-     * Deletes the batch but keeps its individual letters.
+     * Deletes the batch but keeps its deliverables (letters / e-bills / emails).
      *
      * @param batchId the batch UUID
      */
-    public void deleteWithoutLetters(String batchId) {
+    public void deleteWithoutDeliverables(String batchId) {
         delete(batchId, false);
+    }
+
+    /**
+     * Deletes the batch and all its deliverables (letters / e-bills / emails).
+     *
+     * @param batchId the batch UUID
+     */
+    public void deleteWithDeliverables(String batchId) {
+        delete(batchId, true);
+    }
+
+    /**
+     * Deletes the batch but keeps its individual letters.
+     *
+     * @param batchId the batch UUID
+     * @deprecated use {@link #deleteWithoutDeliverables(String)}
+     */
+    @Deprecated
+    public void deleteWithoutLetters(String batchId) {
+        deleteWithoutDeliverables(batchId);
     }
 
     /**
      * Deletes the batch and all its individual letters.
      *
      * @param batchId the batch UUID
+     * @deprecated use {@link #deleteWithDeliverables(String)}
      */
+    @Deprecated
     public void deleteWithLetters(String batchId) {
-        delete(batchId, true);
+        deleteWithDeliverables(batchId);
     }
 
     /**
-     * Deletes a batch, optionally also deleting its letters.
+     * Deletes a batch, optionally also deleting its deliverables.
      *
-     * @param batchId     the batch UUID
-     * @param withLetters if true, all letters in the batch are also deleted
+     * @param batchId          the batch UUID
+     * @param withDeliverables if true, all deliverables (letters / e-bills / emails) in the batch are also deleted
      */
-    public void delete(String batchId, boolean withLetters) {
+    public void delete(String batchId, boolean withDeliverables) {
         ApiRequest request = newRequest()
                 .method(HttpMethod.DELETE)
                 .url(buildUrl("batches", batchId))
                 .body(apiClient.toJson(new JsonApiRequest<>(
-                        new JsonApiRequestData<>(batchId, "batches", new BatchDeleteAttributes(withLetters)))))
+                        new JsonApiRequestData<>(batchId, "batches", new BatchDeleteAttributes(withDeliverables)))))
                 .build();
 
         apiClient.execute(request);

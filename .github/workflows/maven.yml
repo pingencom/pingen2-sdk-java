@@ -20,12 +20,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Set up JDK 17
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v6
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Run unit tests
+      run: mvn -B test --file pom.xml
+    - name: Coverage summary
+      run: |
+        # jacoco.csv columns: 2 package, 3 class, 6/7 branch missed/covered, 8/9 line missed/covered
+        awk -F, 'NR > 1 { c = $2 "." $3; sub(/\$.*/, "", c)
+                          if (!(c in lm)) o[++n] = c
+                          lm[c] += $8; lc[c] += $9; bm[c] += $6; bc[c] += $7 }
+          function row(name, m, c, bm, bc) {
+            printf "%-60s %6d %6d %7d %7d %6.1f%%\n", name, m + c, m, bm + bc, bm, (m + c ? 100 * c / (m + c) : 100) }
+          END { printf "%-60s %6s %6s %7s %7s %7s\n", "Name", "Lines", "Miss", "Branch", "BrMiss", "Cover"
+                for (i = 1; i <= n; i++) { k = o[i]; row(k, lm[k], lc[k], bm[k], bc[k])
+                  M += lm[k]; C += lc[k]; BM += bm[k]; BC += bc[k] }
+                row("TOTAL", M, C, BM, BC) }' target/site/jacoco/jacoco.csv
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package -DskipTests --file pom.xml

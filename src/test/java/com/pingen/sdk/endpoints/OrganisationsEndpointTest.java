@@ -192,7 +192,6 @@ class OrganisationsEndpointTest {
                         "billing_mode": "prepaid",
                         "billing_currency": "CHF",
                         "billing_balance": 100.00,
-                        "default_country": "CH",
                         "created_at": "2020-01-01T00:00:00+01:00",
                         "updated_at": "2020-01-01T00:00:00+01:00"
                     }

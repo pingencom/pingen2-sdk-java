@@ -280,23 +280,27 @@ class BatchesEndpointTest {
     }
 
     @Test
-    void testDeleteWithoutLetters() {
+    void testDeleteWithoutDeliverables() {
         stubFor(delete(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID))
             .willReturn(aResponse().withStatus(204)));
 
-        assertDoesNotThrow(() -> endpoint.deleteWithoutLetters(BATCH_ID));
+        assertDoesNotThrow(() -> endpoint.deleteWithoutDeliverables(BATCH_ID));
 
-        verify(deleteRequestedFor(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID)));
+        verify(deleteRequestedFor(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID))
+            .withRequestBody(matchingJsonPath("$.data.attributes.with_deliverables", equalTo("false")))
+            .withRequestBody(notMatching(".*with_letters.*")));
     }
 
     @Test
-    void testDeleteWithLetters() {
+    void testDeleteWithDeliverables() {
         stubFor(delete(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID))
             .willReturn(aResponse().withStatus(204)));
 
-        assertDoesNotThrow(() -> endpoint.deleteWithLetters(BATCH_ID));
+        assertDoesNotThrow(() -> endpoint.deleteWithDeliverables(BATCH_ID));
 
-        verify(deleteRequestedFor(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID)));
+        verify(deleteRequestedFor(urlPathEqualTo("/organisations/" + ORG_ID + "/batches/" + BATCH_ID))
+            .withRequestBody(matchingJsonPath("$.data.attributes.with_deliverables", equalTo("true")))
+            .withRequestBody(notMatching(".*with_letters.*")));
     }
 
     @Test
