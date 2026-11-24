@@ -38,7 +38,7 @@ jobs:
       with:
         paths: target/site/jacoco/jacoco.xml
         comment-type: both
-        coverage-counter-type: LINE
+        token: ${{ secrets.GITHUB_TOKEN }}
         title: Unit test coverage
         update-comment: true
     - name: Upload coverage report
